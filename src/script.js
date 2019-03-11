@@ -1,33 +1,19 @@
-function isNumeric(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
+var _divImageUrl = null;
 
-chrome.contextMenus.create({
-    id: "tumblrImage",
-    title: "Open Large Image",
-    contexts: ["image"]
-});
+document.addEventListener('mousedown', function(event) {
+    if (event.button === 2 && event.target.style && event.target.style.backgroundImage && event.target.style.backgroundImage.length > 0) {
+        var pieces = event.target.style.backgroundImage.split('"');
 
-chrome.contextMenus.onClicked.addListener(function(clickData) {
-    if (clickData.menuItemId == "tumblrImage"){
-        var imageUrl = clickData.srcUrl;
-
-        if (imageUrl.includes('.media.tumblr.com/')) {
-            var pieces = imageUrl.split('_');
-            var last = pieces[pieces.length - 1];
-            var lastPieces = last.split('.');
-
-            if (isNumeric(lastPieces[0])) {
-                if (lastPieces[1] === 'jpg' || lastPieces[1] === 'jpeg' || lastPieces[1] === 'png') {
-                    lastPieces[0] = 1280;
-                    pieces[pieces.length - 1] = lastPieces.join('.');
-                    imageUrl = pieces.join('_');
-
-                    chrome.tabs.create({
-                        url: imageUrl
-                    });
-                }
-            }
+        if (pieces.length === 3) {
+            _divImageUrl = pieces[1];
+        } else {
+            _divImageUrl = null;
         }
+    }
+}, true);
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request === "getClickedDivImageUrl") {
+        sendResponse({value: _divImageUrl});
     }
 });
