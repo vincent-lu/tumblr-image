@@ -1,0 +1,17 @@
+{
+    "name": "Open Large Tumblr Image",
+    "version": "1.0",
+    "description": "Open Large Tumblr Image",
+    "permissions": [
+        "contextMenus"
+    ],
+    "background": {
+      "scripts": ["script.js"]
+    },
+    "icons": {
+        "128": "icon-128.png",
+        "48": "icon-48.png",
+        "16": "icon-16.png"
+    },
+    "manifest_version": 2
+}
